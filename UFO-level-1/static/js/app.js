@@ -1,41 +1,45 @@
-// from data.js
-let tableData = data;
+// create tableData variable
+var tableData = data;
 
-// YOUR CODE HERE!
-let btnGet = document.querySelector('button');
-let myTable = document.querySelector("#ufo-table");
- 
- 
-let headers = ['Date/Time', 'City', 'State', 'Country', 'Shape', 'Comment'];
+// create tbody variable to append data
+var tbody = d3.select('tbody');
 
- 
-btnGet.addEventListener('click', () => {
-    let table = document.createElement('table');
-    let headerRow = document.createElement('tr');
- 
-    headers.forEach(headerText => {
-        let header = document.createElement('th');
-        let textNode = document.createTextNode(headerText);
-        header.appendChild(textNode);
-        headerRow.appendChild(header);
-    });
- 
-    table.appendChild(headerRow);
- 
-    tableData.forEach(emp => {
-        let row = document.createElement('tr');
- 
-        Object.values(emp).forEach(text => {
-            let cell = document.createElement('td');
-            let textNode = document.createTextNode(text);
-            cell.appendChild(textNode);
-            row.appendChild(cell);
-        })
- 
-        table.appendChild(row);
-    });
- 
-    myTable.appendChild(table);
+// append objects from data.js into table
+tableData.forEach(item => {
+    var tr = tbody.append('tr');
+    tr.append('td').text(item.datetime);
+    tr.append('td').text(item.city);
+    tr.append('td').text(item.state);
+    tr.append('td').text(item.country);
+    tr.append('td').text(item.shape);
+    tr.append('td').text(item.durationMinutes);
+    tr.append('td').text(item.comments);
 });
 
-console.log(myTable)
+// create filtering button to be used in function
+var button = d3.select('#filter-btn');
+
+// function that will get user input from form and use it to filter upon clicking button
+// create variables for inputs and date&time
+button.on('click', function() {
+    var dateInput = d3.select('#date-filter');
+    var dateValue = dateInput.property('value');
+
+    // use input to filter data by date
+    var filtered = tableData.filter(item => item.datetime === dateValue)
+    //  && item.state === stateValue.toLowerCase() && item.city === cityValue.toLowerCase());
+    // console.log(filtered);
+    // clear table info before appending filtered data
+    tbody.html(``);
+    // adding filtered data
+    filtered.forEach( item => {
+        var tr = tbody.append('tr');
+        tr.append('td').text(item.datetime);
+        tr.append('td').text(item.city);
+        tr.append('td').text(item.state);
+        tr.append('td').text(item.country);
+        tr.append('td').text(item.shape);
+        tr.append('td').text(item.durationMinutes);
+        tr.append('td').text(item.comments);
+    });
+});
